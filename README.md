@@ -16,7 +16,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-jom = "0.1.0"
+jom = "0.1.1"
 ```
 
 ## Usage
@@ -69,40 +69,6 @@ pub fn json_to_markdown(json_data: &str, markdown: &str) -> serde_json::Result<S
 
 - **Behavior:**
   - The function replaces every placeholder found in the `markdown` template with the corresponding value from the parsed JSON. If a key is not found in the JSON data, the original placeholder is retained.
-
-## Example
-
-This example shows how nested keys are supported using dot notation:
-
-```rust
-use json_to_markdown::json_to_markdown;
-
-fn main() -> serde_json::Result<()> {
-    let json_data = r#"
-    {
-        "title": "Introducing Rust",
-        "author": "Jane Doe",
-        "stats": {
-            "views": 1000,
-            "likes": 150
-        }
-    }
-    "#;
-
-    let markdown_template = r#"
-    # {title}
-    Written by {author}
-
-    ## Statistics
-    - Views: {stats.views}
-    - Likes: {stats.likes}
-    "#;
-
-    let rendered = json_to_markdown(json_data, markdown_template)?;
-    println!("{}", rendered);
-    Ok(())
-}
-```
 
 ## License
 
