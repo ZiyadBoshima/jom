@@ -58,7 +58,7 @@ pub fn json_to_markdown(json_data: &str, markdown: &str) -> serde_json::Result<S
     let json: Value = serde_json::from_str(json_data)?;
 
     // Compile the regex to capture placeholders like {key} or {nested.key}.
-    let re = Regex::new(r"\{([a-zA-Z0-9.]+)\}").unwrap();
+    let re = Regex::new(r"\{([a-zA-Z0-9_.]+)\}").unwrap();
 
     // Replace each placeholder with the corresponding value from the JSON.
     let rendered = re.replace_all(markdown, |caps: &regex::Captures| {
