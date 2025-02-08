@@ -16,7 +16,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-json_to_markdown = "0.1.0"
+jom = "0.1.0"
 ```
 
 ## Usage
