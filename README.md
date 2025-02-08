@@ -24,7 +24,7 @@ json_to_markdown = "0.1.0"
 Below is a quick example demonstrating how to use the library:
 
 ```rust
-use json_to_markdown::json_to_markdown;
+use jom::json_to_markdown;
 
 fn main() -> serde_json::Result<()> {
     let json_data = r#"
