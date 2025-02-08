@@ -16,7 +16,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-jom = "0.1.1"
+jom = "0.1.2"
 ```
 
 ## Usage
