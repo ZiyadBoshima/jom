@@ -81,7 +81,7 @@ pub fn json_to_markdown(json_data: &str, markdown: &str) -> serde_json::Result<S
 
 ## Acknowledgements
 
-This project was inspired by a similar library in Python, created by [vvhg1](https://github.com/vvhg1).
+This project was inspired by [vvhg1](https://github.com/vvhg1)'s [fractal-lasagna](https://github.com/vvhg1/fractal-lasagna) 🥫.
 
 ## License
 
