@@ -34,6 +34,11 @@ fn main() -> serde_json::Result<()> {
         "phones": {
             "0": "+44 1234567",
             "1": "+44 2345678"
+        },
+        "address": {
+            "street": "10 Downing Street",
+            "city": "London",
+            "postal_code": "SW1A 1AA"
         }
     }
     "#;
@@ -44,6 +49,10 @@ fn main() -> serde_json::Result<()> {
     ### Contact Details
     - {phones.0}
     - {phones.1}
+    ### Address
+    - Street: {address.street}
+    - City: {address.city}
+    - Postal Code: {address.postal_code}
     "#;
 
     let rendered = json_to_markdown(json_data, markdown_template)?;
@@ -69,6 +78,10 @@ pub fn json_to_markdown(json_data: &str, markdown: &str) -> serde_json::Result<S
 
 - **Behavior:**
   - The function replaces every placeholder found in the `markdown` template with the corresponding value from the parsed JSON. If a key is not found in the JSON data, the original placeholder is retained.
+
+## Acknowledgements
+
+This project was inspired by a similar library in Python, created by [vvhg1](https://github.com/vvhg1).
 
 ## License
 
