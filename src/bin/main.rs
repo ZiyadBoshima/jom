@@ -1,13 +1,15 @@
 use jom::json_to_markdown;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // JSON data example
     let data = r#"
         {
             "name": "John Doe",
             "age": 43,
-            "phones": {
-                "0": "+44 1234567",
-                "1": "+44 2345678"
+            "contact": ["+4400000000", "john@doe.com"],
+            "skills": {
+                "languages": ["Rust", "Python", "JavaScript"],
+                "tools": ["Git", "Docker", "Kubernetes"]
             }
         }"#;
 
@@ -16,8 +18,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         # {name}
         ## {age}
         ### Contact Details
-        - {phones.0}
-        - {phones.1}
+        ...{contact}
+        ### Skills
+        #### Languages
+        ...{skills.languages}
+        #### Tools
+        ...{skills.tools}
     "#;
 
     let rendered = json_to_markdown(data, markdown).unwrap_or("".to_string());
