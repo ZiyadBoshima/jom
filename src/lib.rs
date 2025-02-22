@@ -32,21 +32,27 @@ fn get_nested_value<'a>(json: &'a Value, key: &str) -> Option<&'a Value> {
 /// use jom::json_to_markdown;
 ///
 /// let json_data = r#"
-/// {
-///     "name": "John Doe",
-///     "age": 43,
-///     "phones": {
-///         "0": "+44 1234567",
-///         "1": "+44 2345678"
-///     }
-/// }"#;
+///     {
+///         "name": "John Doe",
+///         "age": 43,
+///         "contact": ["+4400000000", "john@doe.com"],
+///         "skills": {
+///             "languages": ["Rust", "Python", "JavaScript"],
+///             "tools": ["Git", "Docker", "Kubernetes"]
+///         }
+///     }"#;
 ///
+/// // markdown example
 /// let markdown = r#"
-/// # {name}
-/// ## {age}
-/// ### Contact Details
-/// - {phones.0}
-/// - {phones.1}
+///     # {name}
+///     ## {age}
+///     ### Contact Details
+///     ...{contact}
+///     ### Skills
+///     #### Languages
+///     ...{skills.languages}
+///     #### Tools
+///     ...{skills.tools}
 /// "#;
 ///
 /// let rendered = json_to_markdown(json_data, markdown).unwrap();
@@ -60,8 +66,38 @@ pub fn json_to_markdown(json_data: &str, markdown: &str) -> serde_json::Result<S
     // Compile the regex to capture placeholders like {key} or {nested.key}.
     let re = Regex::new(r"\{([a-zA-Z0-9_.]+)\}").unwrap();
 
+    // Regular expression for destructor of json array `...{key}`.
+    let re_array = Regex::new(r"\...\{([a-zA-Z0-9_.]+)\}").unwrap();
+
+    let string_one = re_array.replace_all(markdown, |caps: &regex::Captures| {
+        // Extract the key name from the captured group.
+        let key = caps.get(1).unwrap().as_str();
+        // Look up the key in the JSON. If not found, leave the original placeholder.
+        match get_nested_value(&json, key) {
+            // Prepend the value with '-' to make it a markdown list item.
+            Some(value) => {
+                let mut rendered = String::new();
+
+                if value.is_array() {
+                    for (_, v) in value.as_array().unwrap().iter().enumerate() {
+                        rendered.push_str(&format!("- {}\n", v).replace("\"", ""));
+                    }
+                }
+
+                if value.is_object() {
+                    for (k, v) in value.as_object().unwrap().iter() {
+                        rendered.push_str(&format!("- {}: {}\n", k, v).replace("\"", ""));
+                    }
+                }
+
+                rendered
+            }
+            None => caps.get(0).unwrap().as_str().to_string(),
+        }
+    });
+
     // Replace each placeholder with the corresponding value from the JSON.
-    let rendered = re.replace_all(markdown, |caps: &regex::Captures| {
+    let rendered = re.replace_all(&string_one, |caps: &regex::Captures| {
         // Extract the key name from the captured group.
         let key = caps.get(1).unwrap().as_str();
         // Look up the key in the JSON. If not found, leave the original placeholder.
@@ -80,22 +116,20 @@ mod tests {
 
     #[test]
     fn test_json_to_markdown() {
+        // JSON data example
         let json_data = r#"
-        {
-            "name": "John Doe",
-            "age": 43,
-            "phones": {
-                "0": "+44 1234567",
-                "1": "+44 2345678"
-            }
-        }"#;
+            {
+                "name": "John Doe",
+                "age": 43,
+                "contact": ["+44 1234567", "+44 2345678"]
+            }"#;
 
+        // markdown example
         let markdown = r#"
-        # {name}
-        ## {age}
-        ### Contact Details
-        - {phones.0}
-        - {phones.1}
+            # {name}
+            ## {age}
+            ### Contact Details
+            ...{contact}
         "#;
 
         let rendered = json_to_markdown(json_data, markdown).unwrap();
