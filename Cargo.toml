@@ -1,6 +1,6 @@
 [package]
 name = "jom"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Ziyad Boshima"]
 description = "A crate to convert JSON data to markdown by replacing placeholders with JSON values."
 repository = "https://github.com/ZiyadBoshima/jom"
