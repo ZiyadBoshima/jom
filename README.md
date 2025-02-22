@@ -19,7 +19,7 @@ Add the following to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-jom = "0.1.3"
+jom = "<version>"
 ```
 
 ## Usage
